@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 
 export enum Status {
@@ -8,13 +8,17 @@ export enum Status {
   Suspended = 'suspended',
 }
 
-interface IStatusLabelProps {
+export interface StatusLabelProps {
   children: React.ReactNode;
   status: Status;
   disabled?: boolean;
 }
 
-const StatusLabel: FC<IStatusLabelProps> = ({ children, status, disabled }) => {
+export default function StatusLabel({
+  children,
+  status,
+  disabled,
+}: StatusLabelProps) {
   return (
     <div
       className={clsx(
@@ -23,13 +27,13 @@ const StatusLabel: FC<IStatusLabelProps> = ({ children, status, disabled }) => {
         status === Status.NotActive && 'text-red-700 bg-red-100',
         status === Status.Pending && 'text-orange-700 bg-orange-100',
         status === Status.Suspended && 'text-blue-700 bg-blue-100',
-        { ['opacity-75 cursor-not-allowed']: disabled },
+        {
+          ['opacity-75 cursor-not-allowed']: disabled,
+        },
       )}
     >
-      <div className="w-1 h-1 mr-2 rounded-full bg-current"></div>
+      <div className="w-1 h-1 mr-2 rounded-full bg-current" />
       {children}
     </div>
   );
-};
-
-export default StatusLabel;
+}
