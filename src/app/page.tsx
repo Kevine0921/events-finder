@@ -3,6 +3,7 @@ import AddCompanyButton from './components/add-company-button';
 import ServerComponent from './components/server-component';
 import ClientComponent from './components/client-component';
 import ServerComponentCopy from './components/server-component-copy';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
       <ClientComponent>
         <ServerComponentCopy />
       </ClientComponent>
+      <Link href="/dashboard" className="text-orange-500">
+        Dashboard
+      </Link>
     </main>
   );
 }
