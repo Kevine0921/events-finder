@@ -1,11 +1,11 @@
 import { headers } from 'next/headers';
 import React, { FC } from 'react';
 
-export interface IServerComponentCopyProps {
+export interface ServerComponentCopyProps {
   children?: React.ReactNode;
 }
 
-const ServerComponentCopy: FC<IServerComponentCopyProps> = ({ children }) => {
+const ServerComponentCopy: FC<ServerComponentCopyProps> = ({ children }) => {
   console.log('Server Component Copy');
   // console.log(headers());
 

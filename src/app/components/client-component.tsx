@@ -2,11 +2,11 @@
 
 import React, { FC } from 'react';
 
-export interface IClientComponentProps {
+export interface ClientComponentProps {
   children?: React.ReactNode;
 }
 
-const ClientComponent: FC<IClientComponentProps> = ({ children }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ children }) => {
   console.log('Client Component');
 
   return (

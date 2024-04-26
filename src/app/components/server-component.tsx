@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
-export interface IServerComponentProps {
+export interface ServerComponentProps {
   children?: React.ReactNode;
 }
 
-const ServerComponent: FC<IServerComponentProps> = ({ children }) => {
+const ServerComponent: FC<ServerComponentProps> = ({ children }) => {
   console.log('Server Component');
 
   return (
