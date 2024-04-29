@@ -16,6 +16,7 @@ export default function Page({ params }: PageProps) {
       notFound();
     }
   }, [params.id]);
+  
   return (
     <>
       <Header>Company ({params.id})</Header>
