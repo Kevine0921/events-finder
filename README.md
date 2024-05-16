@@ -10,11 +10,6 @@ Discover your next literary adventure with AI NovelSeeker, your trusted AI compa
   <p align="center">AI NovelSeeker Desktop Preview</h1>
 </div>
 
-<div align="center">
-  <img src="public/mobile-preview.png" alt="AI NovelSeeker Mobile Preview" width="500">
-  <p align="center">AI NovelSeeker Mobile Preview</h1>
-</div>
-
 ## Project intro
 
 AI NovelSeeker is a web application that aims to simplify the process of finding your next captivating book to read. With a few simple steps, you can share your reading preferences and let AI NovelSeeker's AI recommendation engine do its magic, providing personalized book recommendations tailored to your taste.
@@ -48,7 +43,7 @@ Follow the instructions below to get the project up and running on your local ma
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/MartaBento/bookish-genie.git
+git clone https://github.com/.../commune-AI-NovelSeeker.git
 ```
 
 2. Navigate to the project directory:
@@ -86,6 +81,3 @@ npm run dev
 
 Contributions are welcome! If you find any issues or have suggestions for improvement, please create an issue or submit a pull request.
 
-## Contact
-
-If you have any questions or feedback about AI NovelSeeker, please contact me at `marta.moreira1@gmail.com`.
