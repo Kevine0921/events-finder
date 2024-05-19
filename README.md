@@ -8,7 +8,7 @@ Are you bored in Toronto? Feeling like going to a Event near you? Look no furthe
 
 ## expectations
 
-- When the Map Loads, The uset finds themselves looking at the Map of Toronto
+- When the Map Loads, The user finds themselves looking at the Map of Toronto
 - The yellow markers on the map are dispalyed as locations for near by public washrooms
 - The blue markers on the map are locations for upcoming events in Toronto
 - Search Location will display results of searches within the map
