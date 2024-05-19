@@ -21,7 +21,7 @@ Are you bored in Toronto? Feeling like going to a Event near you? Look no furthe
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/.../commune-AI-NovelSeeker.git
+git clone https://github.com/.../com-Toronto-Events-Finder.git
 ```
 
 2. Navigate to the project directory:
