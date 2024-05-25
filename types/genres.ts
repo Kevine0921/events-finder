@@ -4,3 +4,4 @@ export interface LiteraryGenre {
   description: string;
   cover: string;
 }
+//
