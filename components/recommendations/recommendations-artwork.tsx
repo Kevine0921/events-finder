@@ -3,7 +3,7 @@ import Image from "next/image";
 import { BookVolume } from "@/types/bookInformationResponse";
 
 import { Button } from "../ui/button";
-
+//
 type RecommendationsArtworkProps = {
   recommendations: { book: string; author: string }[];
   bookInformation: BookVolume[];
