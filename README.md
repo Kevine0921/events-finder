@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center">World-Event-Finder</h1>
 </div>
-### Installation
+## Installation
 
 1. Clone the repository:
 
