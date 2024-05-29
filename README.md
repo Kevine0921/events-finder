@@ -6,13 +6,13 @@
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/.../com-World-Events-Finder.git
+git clone https://github.com/benbasic00769/com-World-Events-Finder.git
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd bookish-genie
+cd com-World-Events-Finder
 ```
 
 3. Install dependencies:
