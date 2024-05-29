@@ -18,11 +18,7 @@ function RecommendationsArtwork({
   return (
     <div>
       {error && (
-        <p className="mt-12 text-center text-sm">
-          Something went wrong. Please confirm if you introduced the API keys
-          correctly and try again. Confirm the instructions{" "}
-          <a href="https://github.com/MartaBento/bookish-genie">here</a>.
-        </p>
+      
       )}
 
       {!error && (
