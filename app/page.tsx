@@ -6,18 +6,19 @@ import Image from "next/image";
 import RecommendedAreas from "./components/RecommendedAreas";
 import PastSearches from "./components/PastSearches";
 import EventList from "./components/EventList";
+import { useEvents } from "./hooks/useEvents";
 
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
   ssr: false,
 });
 
 export default function Home() {
-  const [events, setEvents] = useState([]);
+  const events = useEvents();
 
-  useEffect(() => {
-    // Fetch events data here
-    // setEvents(fetchedEvents)
-  }, []);
+  // useEffect(() => {
+  //   // Fetch events data here
+  //   // setEvents(fetchedEvents)
+  // }, []);
 
   return (
     <main>
@@ -27,7 +28,7 @@ export default function Home() {
           <PastSearches />
         </div>
 
-        <div className="flex-1 min-w-[300px] w-[100vw] lg:w-auto max-h-[30vh] lg:max-h-[60vh] lg:w-auto overflow-hidden h-[90vh] rounded-lg relative sticky top-0 lg:top-10 self-start">
+        <div className="flex-1 min-w-[300px] w-[100vw]  max-h-[30vh] lg:max-h-[60vh] lg:w-auto overflow-hidden h-[90vh] rounded-lg relative top-0 lg:top-10 self-start">
           <MapComponent events={events} />
         </div>
       </div>
