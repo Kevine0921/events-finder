@@ -1,17 +1,25 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.mapbox.com",
+      },
+      {
+        protocol: "https",
+        hostname: "s1.ticketm.net",
+      },
+      {
+        protocol: "https",
+        hostname: "images.universe.com",
+      },
+    ],
+  },
+};
 
 export default nextConfig;
-
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   images: {
-//     domains: ["images.unsplash.com", "api.mapbox.com"], // Add any other domains you need
-//   },
-//   webpack: (config) => {
-//     config.resolve.fallback = { fs: false, net: false, tls: false };
-//     return config;
-//   },
-// };
-
-// module.exports = nextConfig;

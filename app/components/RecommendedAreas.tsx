@@ -1,8 +1,14 @@
 "use client";
-
 import { useState, useEffect } from "react";
+import { Map } from "mapbox-gl";
 
-const recommendedAreas = [
+interface Area {
+  address: string;
+  lon: number;
+  lat: number;
+}
+
+const recommendedAreas: Area[] = [
   {
     address: "Scotiabank Arena",
     lon: -79.3791035,
@@ -21,13 +27,13 @@ const recommendedAreas = [
 ];
 
 export default function RecommendedAreas() {
-  const [map, setMap] = useState(null);
+  const [map, setMap] = useState<Map | null>(null);
 
   useEffect(() => {
     // Initialize map here if needed
   }, []);
 
-  const handleAreaClick = (lon, lat) => {
+  const handleAreaClick = (lon: number, lat: number): void => {
     if (map) {
       map.flyTo({
         center: [lon, lat],
@@ -43,7 +49,7 @@ export default function RecommendedAreas() {
       </h2>
       <hr />
       <ul id="recommended-areas">
-        {recommendedAreas.map((area, index) => (
+        {recommendedAreas.map((area: Area, index: number) => (
           <li
             key={index}
             className="text-xl cursor-pointer hover:text-cyan-700"

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Commune AI World Event Finder",
+  // title: "Commune AI World Event Finder",
+  title: "World Event Finder",
   description: "Find events around the world",
 };
 
