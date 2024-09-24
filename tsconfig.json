@@ -21,6 +21,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/explore/[id]/page.tsx", "app/map/sidebar.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/explore/[id]/page.tsx",
+    "app/map/sidebar.jsx",
+    "app/map/mapView.jsx"
+  ],
   "exclude": ["node_modules"]
 }
