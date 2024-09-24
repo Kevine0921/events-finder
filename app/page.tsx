@@ -1,33 +1,48 @@
-"use client";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import RecommendedAreas from "./components/RecommendedAreas";
-import EventList from "./components/EventList";
-import { useEvents } from "./hooks/useEvents";
+import Link from "next/link";
+import React from "react";
+import Particles from "./components/particles";
 
-const MapComponent = dynamic(() => import("./components/MapComponent"), {
-  ssr: false,
-});
+const navigation = [
+  {
+    name: "Explore",
+    href: "/explore",
+  },
+  {
+    name: "Map",
+    href: "/map",
+  },
+];
 
 export default function Home() {
-  const events = useEvents();
-
   return (
-    <main>
-      <div className="flex flex-row w-full flex-wrap-reverse lg:flex-nowrap text-white">
-        <div className="lg:flex-1 w-full lg:w-64 flex-shrink-0 px-2">
-          <RecommendedAreas />
-        </div>
-
-        <div className="flex-1 min-w-[300px] w-[100vw]  max-h-[30vh] lg:max-h-[60vh] lg:w-auto overflow-hidden h-[90vh] rounded-lg relative top-0 lg:top-10 self-start">
-          <MapComponent events={events} />
-        </div>
-      </div>
-
-      <div>
-        =======================================================
-        <EventList events={events} />
-      </div>
-    </main>
+    <div className="flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
+      <nav className="my-16 animate-fade-in">
+        <ul className="flex items-center justify-center gap-4">
+          {navigation.map((item, key) => (
+            <Link
+              key={key}
+              href={item.href}
+              className="text-lg duration-500 text-zinc-500 hover:text-zinc-300"
+            >
+              {item.name}
+            </Link>
+          ))}
+        </ul>
+      </nav>
+      <div className="hidden w-screen h-px animate-glow md:block animate-fade-left bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0"/>
+      <Particles
+        className="absolute inset-0 -z-10 animate-fade-in"
+        quantity={100}
+      />
+      <h1 className="z-10 text-4xl text-transparent duration-1000 bg-white cursor-default text-edge-outline animate-title font-display sm:text-6xl md:text-9xl whitespace-nowrap bg-clip-text ">
+        Commune AI
+      </h1>
+      <div className="hidden w-screen h-px animate-glow md:block animate-fade-right bg-gradient-to-r from-zinc-300/0 via-zinc-300/50 to-zinc-300/0" />
+      <div className="my-16 text-center animate-fade-in">
+        <h2 className="text-sm text-zinc-500 ">
+          this is description with map about web3events for people who love blockchain.
+        </h2>
+      </div>      
+    </div>
   );
 }
