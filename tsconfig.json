@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/explore/[id]/page.tsx",
+    "app/explore/[id]/page.jsx",
     "app/map/sidebar.jsx",
     "app/map/mapView.jsx"
   ],
