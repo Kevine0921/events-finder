@@ -66,58 +66,10 @@ export const MainPage: React.FC = () => {
   };
 
   const fetchInitialData = async () => {
-    const web3eventList: Web3event[] = await fetchWeb3event(
-      0,
-      status,
-      queryType
-    );
-    if (Array.isArray(web3eventList) && web3eventList.length !== 0) {
-      setWeb3event(web3eventList);
-      setPages(1);
-      setFetchFull(true);
+    if (Array.isArray(events) && events.length !== 0) {
       setLoading(false);
     } else {
       setLoading(true);
-      setWeb3event([]);
-    }
-  };
-
-  const fetchAsteriskData = async () => {
-    try {
-      const result = await axios.post(`/api/explore/asterisk`);
-      const data = result.data.data;
-      const ImageData = data.map((event: any) => ({
-        image: event.image,
-        title: event.title,
-      }));
-      setAsteriskImages(ImageData);
-    } catch (error) {
-      console.error("Error fetching asterisk data", error);
-      throw error;
-    }
-  };
-
-  const fetchPopCitiesData = async () => {
-    try {
-      const result: any = await axios.get(`/api/explore/asterisk`);
-      const data = result.data.data;
-      const ImageData = data.map((city: any) => ({
-        image: city.image,
-        name: city.name,
-        id: city.id,
-      }));
-      setPopCities(ImageData);
-    } catch (error) {}
-  };
-
-  const fetchCountInfo = async () => {
-    try {
-      const result = await axios.get(`/api/explore/countInfo`);
-      const data = result.data.data;
-      setCountInfo(data);
-    } catch (error) {
-      console.error("Error fetching countInfo", error);
-      throw error;
     }
   };
 
@@ -164,13 +116,7 @@ export const MainPage: React.FC = () => {
 
   useEffect(() => {
     fetchInitialData();
-  }, [status, queryType]);
-
-  useEffect(() => {
-    fetchCountInfo();
-    fetchAsteriskData();
-    fetchPopCitiesData();
-  }, []);
+  }, [events]);
 
   return (
     <div>
@@ -197,53 +143,45 @@ export const MainPage: React.FC = () => {
 							</div>
 						</div> */}
             </div>
-            <div className="w-[35%] flex-1">
-              <Swiper
-                effect={"coverflow"}
-                grabCursor={true}
-                centeredSlides={true}
-                slidesPerView={"auto"}
-                coverflowEffect={{
-                  rotate: 50,
-                  stretch: 0,
-                  depth: 650,
-                  modifier: 1,
-                  slideShadows: false,
-                  scale: 0.5,
-                }}
-                loop={true}
-                pagination={{
-                  clickable: true,
-                }}
-                autoplay={{
-                  delay: 2000,
-                  disableOnInteraction: false,
-                }}
-                modules={[EffectCoverflow, Pagination, Autoplay]}
-                className="asteriskSwiper">
-                {events
-                  .sort(() => Math.random() - 0.5)
-                  .slice(0, 5)
-                  .map((event: any, key) => (
-                    <SwiperSlide key={key}>
-                      <div className="rounded-lg bg-zinc-800 border border-zinc-700">
-                        <div className="p-8 rounded-lg overflow-hidden">
-                          <img
-                            src={event.featureImage}
-                            height={10}
-                            width={10}
-                          />
-                        </div>
-                        <div className="px-4 pb-4">
-                          <h1 className=" text-slate-200 text-xl">
-                            {event.title}
-                          </h1>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-              </Swiper>
-            </div>
+            {/* <div className="w-[35%] flex-1">
+						<Swiper
+							effect={'coverflow'}
+							grabCursor={true}
+							centeredSlides={true}
+							slidesPerView={'auto'}
+							coverflowEffect={{
+								rotate: 50,
+								stretch: 0,
+								depth: 650,
+								modifier: 1,
+								slideShadows: false,
+								scale:0.5,
+							}}
+							loop={true}
+							pagination={{
+								clickable:true,
+							}}
+							autoplay={{
+								delay: 2000,
+								disableOnInteraction: false
+							}}
+							modules={[ EffectCoverflow, Pagination, Autoplay ]}
+							className="asteriskSwiper"
+						>
+							{events.sort(() => Math.random() - 0.5).slice(0, 5).map((event:any ,key) => (
+								<SwiperSlide key={key}>
+									<div className="rounded-lg bg-zinc-800 border border-zinc-700">
+										<div className="p-8 rounded-lg overflow-hidden">
+											<img src={event.featureImage} height={10} width={10}/>
+										</div>
+										<div className="px-4 pb-4">
+											<h1 className=" text-slate-200 text-xl">{event.title}</h1>
+										</div>
+									</div>
+								</SwiperSlide>   
+							))}
+						</Swiper>
+					</div> */}
           </div>
           {/* <div className="w-full">
 					<Swiper
@@ -294,10 +232,10 @@ export const MainPage: React.FC = () => {
 				</InfiniteScroll> */}
           <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4">
             {events.slice(0, 80).map((event, key) => (
-              <div key={key} className="grid grid-cols-1 gap-4">
+              <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
                 <Card key={1}>
                   <Link href={`/explore/${event.id}`}>
-                    <div className="w-2/5">
+                    <div className="w-2/5 cursor-pointer">
                       <Image
                         className="object-contain w-full rounded-xl overflow-hidden my-2 mx-4"
                         src={event.featureImage}

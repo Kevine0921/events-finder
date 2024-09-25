@@ -80,14 +80,14 @@ export function useEvents() {
           })
           .map(
             (event: TicketmasterEvent): ProcessedEvent => ({
-              lat: event._embedded.venues[0].location.latitude,
-              lon: event._embedded.venues[0].location.longitude,
+              lat: event._embedded?.venues[0]?.location?.latitude,
+              lon: event._embedded?.venues[0]?.location?.longitude,
               id: event.id,
               info: event.info,
               title: event.name,
               url: event.url,
-              venueNameData: event._embedded.venues[0].name,
-              featureImage: event.images[0].url,
+              venueNameData: event._embedded?.venues[0]?.name,
+              featureImage: event.images[0]?.url,
               eventStartDay: event.dates.start.localDate,
               eventStartTime: event.dates.start.localTime,
               eventTimeZone: event.dates.timezone,
