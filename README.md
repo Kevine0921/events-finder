@@ -1,6 +1,3 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
 <h2>World Events Finder App</h2>
 The "World Events Finder App" is a comprehensive platform that enables users to discover events happening globally in real-time, with an interactive map powered by Mapbox. 
 Users can easily search for events based on location, category, and time, ensuring they never miss important activities or gatherings. With personalized recommendations and an intuitive interface, 
