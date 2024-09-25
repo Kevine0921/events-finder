@@ -3,23 +3,22 @@ import { Inter } from "next/font/google";
 import Localfont from "next/font/local";
 import type { Metadata } from "next";
 
-import '@rainbow-me/rainbowkit/styles.css';
-import { Providers } from './providers'
+import "@rainbow-me/rainbowkit/styles.css";
+import { Providers } from "./providers";
 
-
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter", 
+  variable: "--font-inter",
 });
 
 const calSans = Localfont({
   src: "../public/fonts/CalSans-SemiBold.ttf",
   variable: "--font-calsans",
-})
+});
 
 export const metadata: Metadata = {
   title: "CommuneAI web3event Map",
-  description: "you can find web3 event here in map",
+  description: "you can find world events here in map",
 };
 
 export default function RootLayout({
@@ -28,10 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    
-    <html lang="en"
-      className={[inter.variable, calSans.variable].join(" ")}
-    >
+    <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
       <body className="bg-black w-full">
         <Providers>{children}</Providers>
       </body>

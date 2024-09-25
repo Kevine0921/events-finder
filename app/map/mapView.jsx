@@ -49,8 +49,8 @@ const MapView = ({ web3eventMap }) => {
     if (!map) return;
 
     const coordinates = [
-      event._embedded.venues[0].location.longitude,
-      event._embedded.venues[0].location.latitude,
+      event._embedded?.venues[0]?.location?.longitude,
+      event._embedded?.venues[0]?.location?.latitude,
     ];
     map.flyTo({
       center: coordinates,
@@ -339,8 +339,8 @@ function convertPreDataToGeoJSON(web3eventMap) {
     geometry: {
       type: "Point",
       coordinates: [
-        event._embedded.venues[0].location.longitude,
-        event._embedded.venues[0].location.latitude,
+        event._embedded?.venues[0]?.location?.longitude,
+        event._embedded?.venues[0]?.location?.latitude,
       ],
     },
   }));
