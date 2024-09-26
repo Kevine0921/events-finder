@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { AutoComplete, Input } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import Link from 'next/link'
+import debounce from 'lodash/debounce';
 
 const MapView = ({ web3eventMap }) => {
   console.log(web3eventMap.slice(0, 3), '===================')
@@ -14,6 +14,7 @@ const MapView = ({ web3eventMap }) => {
   const [pageIsMounted, setPageIsMounted] = useState(false);
   const [map, setMap] = useState(null);
   const [popup, setPopup] = useState(null);
+  const [locationOptions, setLocationOptions] = useState([]);
 
   useEffect(() => {
     setPageIsMounted(true);
@@ -85,16 +86,58 @@ const MapView = ({ web3eventMap }) => {
     setPopup(newPopup);
   }
 
+  const fetchLocationSuggestions = useCallback(debounce(async (value) => {
+    if (value.length > 0) {
+      const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json`;
+      const url = `${endpoint}?access_token=${mapboxgl.accessToken}&autocomplete=true&limit=5`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.features && data.features.length > 0) {
+          const suggestions = data.features.map(feature => ({
+            value: feature.place_name,
+            coordinates: feature.center
+          }));
+          setLocationOptions(suggestions);
+        } else {
+          setLocationOptions([]);
+        }
+      } catch (error) {
+        console.error('Error fetching location suggestions:', error);
+        setLocationOptions([]);
+      }
+    } else {
+      setLocationOptions([]);
+    }
+  }, 300), []);
+
+  const handleLocationSelect = (value, option) => {
+    if (!map) return;
+
+    map.flyTo({
+      center: option.coordinates,
+      zoom: 12
+    });
+  };
+
   return (
     <div className="px-6 mx-auto max-w-[100rem] lg:px-8 pt-[70px] h-screen">
       <div className="w-full flex pt-3">
-        <SideBar web3eventMap={web3eventMap} onTitleClick={web3eventListClickHandle} />
+        <SideBar
+          web3eventMap={web3eventMap}
+          onTitleClick={web3eventListClickHandle}
+          fetchLocationSuggestions={fetchLocationSuggestions}
+          locationOptions={locationOptions}
+          handleLocationSelect={handleLocationSelect}
+        />
         <div id="web3eventMap" className="w-full h-[88vh]">
         </div>
       </div>
     </div>
   )
 };
+
 
 const addDataLayer = (map, data) => {
   map.addSource('web3events', {
@@ -274,7 +317,13 @@ const initializeMap = (map) => {
   });
 }
 
-const SideBar = ({ web3eventMap, onTitleClick }) => {
+const SideBar = ({
+  web3eventMap,
+  onTitleClick,
+  fetchLocationSuggestions,
+  locationOptions,
+  handleLocationSelect
+}) => {
   const [filterEvent, setFilterEvent] = useState(web3eventMap);
   const options = web3eventMap.map((event) => ({
     value: event?.name,
@@ -282,12 +331,12 @@ const SideBar = ({ web3eventMap, onTitleClick }) => {
   }));
 
   return (
-    <div className="w-[450px] h-[88vh] bg-black py-2 ">
-      <div className="h-[80px] px-2 py-2 flex justify-center items-center">
+    <div className="w-[450px] h-[88vh] bg-black py-2">
+      <div className="h-[120px] px-2 py-2 flex flex-col justify-center items-center">
         <AutoComplete
           popupClassName="certain-category-search-dropdown"
           popupMatchSelectWidth={500}
-          style={{ width: 250 }}
+          style={{ width: 250, marginBottom: '10px' }}
           options={options}
           size="large"
           filterOption={(inputValue, option) =>
@@ -299,8 +348,17 @@ const SideBar = ({ web3eventMap, onTitleClick }) => {
         >
           <Input.Search size="large" placeholder="search event title" />
         </AutoComplete>
+        <AutoComplete
+          style={{ width: 250 }}
+          options={locationOptions}
+          onSearch={fetchLocationSuggestions}
+          onSelect={handleLocationSelect}
+          className="white-placeholder"
+        >
+          <Input.Search size="large" placeholder="search location" />
+        </AutoComplete>
       </div>
-      <div className="w-full h-[calc(88vh-96px)] px-2 overflow-y-auto scroll grid gap-2">
+      <div className="w-full h-[calc(88vh-136px)] px-2 overflow-y-auto scroll grid gap-2">
         {filterEvent.map((event, key) => (
           <div key={key} onClick={() => onTitleClick(event)} className="w-full rounded-lg border border-zinc-800 px-3 py-2">
             <div className="text-zinc-200 font-semibold text-lg">{event?.name}</div>
@@ -310,6 +368,13 @@ const SideBar = ({ web3eventMap, onTitleClick }) => {
           </div>
         ))}
       </div>
+      <style jsx global>{`
+                .white-placeholder .ant-select-selection-search-input::placeholder,
+                .white-placeholder .ant-input-search-input::placeholder {
+                    color: white !important;
+                    opacity: 0.7;
+                }
+            `}</style>
     </div>
   )
 }
@@ -335,5 +400,7 @@ function convertPreDataToGeoJSON(web3eventMap) {
     features
   };
 }
+
+
 
 export default MapView;

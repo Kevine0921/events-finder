@@ -1,7 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
-const querySize = "200";
 
 export async function POST(req: Request) {
   const data = await req.json();
@@ -18,14 +17,35 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
-  const ticketMasterURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=Sports&apikey=${apiKey}&size=${querySize}&sort=date,asc&countryCode=GB,IE,DE,AT,CH,BE,NL,FR,ES,IT,SE,NO,DK,FI,PL,CZ,HU,SK,BR,AR,CL,CA`;
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = searchParams.get("page") || "1";
+  const size = searchParams.get("size") || "20";
+
+  const ticketMasterURL = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&size=${size}&page=${page}&sort=date,asc&countryCode=GB,IE,DE,AT,CH,BE,NL,FR,ES,IT,SE,NO,DK,FI,PL,CZ,HU,SK,BR,AR,CL,CA`;
 
   try {
     const response = await fetch(ticketMasterURL);
     const data = await response.json();
 
-    return NextResponse.json(data);
+    // Extract pagination information
+    const totalElements = data.page?.totalElements || 0;
+    const totalPages = data.page?.totalPages || 0;
+    const currentPage = data.page?.number || 1;
+    const pageSize = data.page?.size || 80;
+
+    // Prepare the response
+    const formattedResponse = {
+      events: data._embedded?.events || [],
+      pagination: {
+        totalElements,
+        totalPages,
+        currentPage,
+        pageSize,
+      },
+    };
+
+    return NextResponse.json(formattedResponse);
   } catch (error) {
     console.error("Error fetching events:", error);
     return NextResponse.json(
