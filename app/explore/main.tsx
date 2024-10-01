@@ -1,43 +1,160 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/app/components/card";
 import { LoadingComponent } from "@/app/components/loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useEvents } from "../hooks/useEvents";
-import { AutoComplete, Input } from "antd";
+import { AutoComplete, Input, Button } from "antd";
+import { CloudCog } from "lucide-react";
 
 export const MainPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(2);
-  const [eventsPerPage] = useState(80);
-  const { events, paginationInfo, loading } = useEvents(
-    currentPage,
-    eventsPerPage
-  );
-  const [filterEvent, setFilterEvent] = useState(events);
-  const options = events.map((event) => ({
-    value: event?.title,
-  }));
+  // const [currentPage, setCurrentPage] = useState(2);
+  // const [eventsPerPage] = useState(200);
+  // const { events, paginationInfo, loading } = useEvents(
+  //   currentPage,
+  //   eventsPerPage
+  // );
+  const { events, loading } = useEvents();
+
+  const [filteredEvents, setFilteredEvents] = useState(events);
+  const [titleSearchTerm, setTitleSearchTerm] = useState("");
+  const [citySearchTerm, setCitySearchTerm] = useState("");
+
+  useEffect(() => {
+    setFilteredEvents(events);
+  }, [events]);
+  console.log("=============events number==============", events.length);
+
+  const titleOptions = Array.from(
+    new Set(events.map((event) => event?.title))
+  ).map((title) => ({ value: title, label: title }));
+
+  const cityOptions = Array.from(
+    new Set(events.map((event) => event?.city))
+  ).map((city) => ({ value: city, label: city }));
 
   // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handleSearch = () => {
+    const filtered = events.filter(
+      (event) =>
+        (titleSearchTerm === "" ||
+          event?.title
+            ?.toLowerCase()
+            .includes(titleSearchTerm.toLowerCase())) &&
+        (citySearchTerm === "" ||
+          event?.city?.toLowerCase().includes(citySearchTerm.toLowerCase()))
+    );
+    setFilteredEvents(filtered);
+  };
+
+  const handleClearSearch = () => {
+    setTitleSearchTerm("");
+    setCitySearchTerm("");
+    setFilteredEvents(events);
+  };
 
   return (
     <div>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
-          <div className="flex items-center">
-            <div className="w-[45%] pl-8 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-100 lg:text-4xl">
-                Explore All events in the world
-              </h2>
-              <p className="mt-4 text-zinc-400">
-                You can explore all events here.
-              </p>
+          {/* <div className="flex flex-row w-full items-center justify-between">
+            <div className="flex items-center">
+              <div className="pl-8 text-center">
+                <p className="mt-4 text-white">
+                  You can explore all events here.
+                </p>
+              </div>
+            </div>
+            <div className="flex space-x-4 mr-44 items-center">
+              <AutoComplete
+                style={{ width: 200}}
+                options={titleOptions}
+                filterOption={(inputValue, option) =>
+                  option?.value
+                    ?.toLowerCase()
+                    .indexOf(inputValue.toLowerCase()) !== -1
+                }
+                onSelect={(value) => setTitleSearchTerm(value)}
+                onChange={(value) => setTitleSearchTerm(value)}
+                value={titleSearchTerm}>
+                <Input size='large' style={{ width: '300px' }} placeholder="Search by title" />
+              </AutoComplete>
+              <div className="w-20"></div>
+              <AutoComplete
+                style={{ width: 200 }}
+                options={cityOptions}
+                filterOption={(inputValue, option) =>
+                  option?.value
+                    ?.toLowerCase()
+                    .indexOf(inputValue.toLowerCase()) !== -1
+                }
+                onSelect={(value) => setCitySearchTerm(value)}
+                onChange={(value) => setCitySearchTerm(value)}
+                value={citySearchTerm}>
+                <Input size="large" style={{ width: '300px' }} placeholder="Search by city" />
+              </AutoComplete>
+              <Button onClick={handleSearch} type="primary" size="large" style={{marginLeft : '150px'}}>
+                Search
+              </Button>
+              <Button onClick={handleClearSearch} type="primary" className="hover:bg-pink-500" size="large">
+                Clear
+              </Button>
+            </div>
+          </div> */}
+          <div className="flex flex-col lg:flex-row w-full items-center justify-between p-4 space-y-4 lg:space-y-0">
+            <div className="w-full lg:w-auto text-center lg:text-left lg:pl-8">
+              <p className="text-white">You can explore all events here.</p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
+              <AutoComplete
+                className="w-full sm:w-64 lg:w-72"
+                options={titleOptions}
+                filterOption={(inputValue, option) =>
+                  option?.value
+                    ?.toLowerCase()
+                    .indexOf(inputValue.toLowerCase()) !== -1
+                }
+                onSelect={(value) => setTitleSearchTerm(value)}
+                onChange={(value) => setTitleSearchTerm(value)}
+                value={titleSearchTerm}>
+                <Input size="large" placeholder="Search by title" />
+              </AutoComplete>
+              <AutoComplete
+                className="w-full sm:w-64 lg:w-72"
+                options={cityOptions}
+                filterOption={(inputValue, option) =>
+                  option?.value
+                    ?.toLowerCase()
+                    .indexOf(inputValue.toLowerCase()) !== -1
+                }
+                onSelect={(value) => setCitySearchTerm(value)}
+                onChange={(value) => setCitySearchTerm(value)}
+                value={citySearchTerm}>
+                <Input size="large" placeholder="Search by city" />
+              </AutoComplete>
+              <div className="flex space-x-4 w-full sm:w-auto">
+                <Button
+                  onClick={handleSearch}
+                  type="primary"
+                  size="large"
+                  className="flex-1 sm:flex-none">
+                  Search
+                </Button>
+                <Button
+                  onClick={handleClearSearch}
+                  type="primary"
+                  size="large"
+                  className="flex-1 sm:flex-none hover:bg-pink-500">
+                  Clear
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="w-full h-px bg-zinc-800" />
-          {paginationInfo && (
+          <div className="w-full h-px bg-zinc-800 my-4" />
+          {/* {paginationInfo && (
             <div className="flex justify-center my-4">
               <Pagination
                 currentPage={currentPage}
@@ -45,33 +162,22 @@ export const MainPage: React.FC = () => {
                 paginate={paginate}
               />
             </div>
-          )}
-          {/* <div className="h-[80px] px-2 py-2 flex justify-center items-center">
-                <AutoComplete
-                    popupClassName="certain-category-search-dropdown"
-                    popupMatchSelectWidth={500}
-                    style={{ width: 250 }}
-                    options={options}
-                    size="large"
-                    filterOption={(inputValue, option) =>
-                        option?.value?.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1 
-                    }
-                >
-                    <Input.Search size="large" placeholder="search event title"/>
-                </AutoComplete>
-          </div> */}
-          <div className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4">
-            {events.map((event, key) => (
+          )} */}
+
+          <div
+            className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4"
+            style={{ fontFamily: "inherit" }}>
+            {filteredEvents.map((event, key) => (
               <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
                 <Card key={1}>
-                  <Link href={`/explore/${event.id}`}>
-                    <div className="w-2/5 cursor-pointer">
+                  <Link href={event?.url} target="blank">
+                    <div className="cursor-pointer w-full h-[400px] relative">
                       <Image
-                        className="object-contain w-full rounded-xl overflow-hidden my-2 mx-4"
+                        className="rounded-xl overflow-hidden"
                         src={event.featureImage}
                         alt={event.title}
-                        width={100}
-                        height={100}
+                        layout="fill"
+                        objectFit="cover"
                       />
                     </div>
                     <div className="px-2">
@@ -88,6 +194,15 @@ export const MainPage: React.FC = () => {
               </div>
             ))}
           </div>
+          {/* {paginationInfo && (
+            <div className="flex justify-center my-4">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={paginationInfo.totalPages}
+                paginate={paginate}
+              />
+            </div>
+          )} */}
         </div>
       ) : (
         <LoadingComponent />
@@ -159,3 +274,5 @@ const Pagination: React.FC<PaginationProps> = ({
     </nav>
   );
 };
+
+export default MainPage;
