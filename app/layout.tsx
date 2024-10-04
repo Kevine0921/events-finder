@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Localfont from "next/font/local";
 import type { Metadata } from "next";
+import { EventsProvider } from "./hooks/useEvents";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./providers";
@@ -11,13 +12,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const calSans = Localfont({
-  src: "../public/fonts/CalSans-SemiBold.ttf",
-  variable: "--font-calsans",
+const poppins = Localfont({
+  src: "../public/fonts/Poppins-Medium.ttf",
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
-  title: "CommuneAI web3event Map",
+  // title: "CommuneAI web3event Map",
+  title: "Event Finder App",
   description: "you can find world events here in map",
 };
 
@@ -27,9 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
+    <html lang="en" className={[inter.variable, poppins.variable].join(" ")}>
+      <link rel="icon" type="image/png" href="/favicon.png" />
       <body className="bg-black w-full">
-        <Providers>{children}</Providers>
+        <Providers>
+          <EventsProvider>{children}</EventsProvider>
+        </Providers>
       </body>
     </html>
   );
