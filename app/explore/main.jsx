@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card } from "@/app/components/card";
 import { LoadingComponent } from "@/app/components/loading";
 import Image from "next/image";
@@ -16,59 +16,14 @@ export const MainPage = () => {
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [titleSearchTerm, setTitleSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [options, setOptions] = useState([]);
 
-  // const fetchWeb3event = async () => {
-  // 	const data = {
-  //     "pages": 0,
-  //     "page_size": 0,
-  //     "status": 1,
-  //     "time": "",
-  //     "time_to": "",
-  //     "type": 1
-  // };
-  // 	try {
-  // 		const result = await axios.post(`/api/explore`,data)
-  // 		return result.data.data;
-  // 	} catch (error) {
-  // 		console.error('Error fetching web3event data list:', error);
-  // 		throw error;
-  // 	};
-  // }
 
-  // useEffect(() => {
-  //   const fetchWeb3Data = async () => {
-  //     try {
-  //       const data = await fetchWeb3event();
-  //       setWeb3Data(data);
-  //       console.log('===========web3 events number======', data.length);
-  //     } catch (error) {
-  //       console.error('Error fetching web3 events:', error);
-  //     }
-  //   };
-
-  //   fetchWeb3Data();
-  // }, []);
-
-  //   const fetchWeb3Data = async () => {
-  //   try {
-  //     console.log('Fetching Web3 events...');
-  //     const data = await fetchWeb3event();
-  //     console.log('Received Web3 events:', data);
-  //     setWeb3Data(data);
-  //     console.log('Web3 events set in state:', data.length);
-  //   } catch (error) {
-  //     console.error('Error fetching web3 events:', error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchWeb3Data();
-  // }, []);
 
   useEffect(() => {
     setFilteredEvents(events);
   }, [events]);
-  console.log("=============events number==============", events?.length);
+  console.log('=============events number==============', events?.length)
 
   const titleOptions = Array.from(
     new Set(events.map((event) => event?.title))
@@ -97,54 +52,56 @@ export const MainPage = () => {
     setFilteredEvents(events);
   };
 
+  const allOptions = useMemo(() => {
+    return Array.from(new Set(events.map((event) => event?.title)))
+      .map((title) => ({ value: title, label: title }));
+  }, [events]);
+
+  const onSearch = (searchText) => {
+    setTitleSearchTerm(searchText);
+    const filteredOptions = allOptions.filter((option) =>
+      option.value.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setOptions(filteredOptions);
+  };
+
   return (
     <div>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col lg:flex-row w-full items-center justify-between p-4 space-y-4 lg:space-y-0">
             <div className="w-full lg:w-auto text-center lg:text-left lg:pl-8">
-              <p className="text-white">You can explore all events here.</p>
+              <p className="text-white">
+                You can explore all events here.
+              </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
               <AutoComplete
                 className="w-full sm:w-64 lg:w-72"
-                options={titleOptions}
-                filterOption={(inputValue, option) =>
-                  option?.value
-                    ?.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) !== -1
-                }
+                options={options}
+                onSearch={onSearch}
                 onSelect={(value) => setTitleSearchTerm(value)}
                 onChange={(value) => setTitleSearchTerm(value)}
-                value={titleSearchTerm}>
+              >
                 <Input size="large" placeholder="Search by title" />
               </AutoComplete>
               <AutoComplete
                 className="w-full sm:w-64 lg:w-72"
                 options={cityOptions}
                 filterOption={(inputValue, option) =>
-                  option?.value
-                    ?.toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) !== -1
+                  option?.value?.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
                 }
                 onSelect={(value) => setCitySearchTerm(value)}
                 onChange={(value) => setCitySearchTerm(value)}
-                value={citySearchTerm}>
+                value={citySearchTerm}
+              >
                 <Input size="large" placeholder="Search by city" />
               </AutoComplete>
               <div className="flex space-x-4 w-full sm:w-auto">
-                <Button
-                  onClick={handleSearch}
-                  type="primary"
-                  size="large"
-                  className="flex-1 sm:flex-none">
+                <Button onClick={handleSearch} type="primary" size="large" className="flex-1 sm:flex-none">
                   Search
                 </Button>
-                <Button
-                  onClick={handleClearSearch}
-                  type="primary"
-                  size="large"
-                  className="flex-1 sm:flex-none hover:bg-pink-500">
+                <Button onClick={handleClearSearch} type="primary" size="large" className="flex-1 sm:flex-none hover:bg-pink-500">
                   Clear
                 </Button>
               </div>
@@ -191,5 +148,6 @@ export const MainPage = () => {
     </div>
   );
 };
+
 
 export default MainPage;
