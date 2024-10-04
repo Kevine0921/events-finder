@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import moment from "moment";
 import axios from "axios";
+import { getLumaEvents } from "../../util/getlumaevent";
 
 const EventsContext = createContext();
 
@@ -52,7 +53,7 @@ export const EventsProvider = ({ children }) => {
       if (
         cachedEvents &&
         cachedTimestamp &&
-        Date.now() - parseInt(cachedTimestamp) < 3600000
+        Date.now() - parseInt(cachedTimestamp) < 360000
       ) {
         setEvents(JSON.parse(cachedEvents));
         setLoading(false);
@@ -101,8 +102,31 @@ export const EventsProvider = ({ children }) => {
         eventType: "web3",
       }));
 
+      const lumaEvents = await getLumaEvents();
+      const filteredLumaEvents = lumaEvents.map((event) => ({
+        id: event.api_id,
+        title: event.name,
+        url: `https://lu.ma/${event.url}`,
+        venueNameData: event.full_address,
+        city: event.city,
+        featureImage: event.cover_url,
+        eventTimeZone: event.timezone,
+        eventType: "luma",
+      }));
       // Combine events
-      const combinedEvents = [...filteredTicketEvents, ...filteredWeb3Events];
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      const combinedEvents = shuffleArray([
+        ...filteredTicketEvents,
+        ...filteredWeb3Events,
+        ...filteredLumaEvents,
+      ]);
 
       // Cache the events and timestamp
       localStorage.setItem("cachedEvents", JSON.stringify(combinedEvents));

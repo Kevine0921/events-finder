@@ -17,6 +17,7 @@ export const MainPage = () => {
   const [titleSearchTerm, setTitleSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
   const [options, setOptions] = useState([]);
+  const [displayCount, setDisplayCount] = useState(60);
 
 
 
@@ -50,6 +51,7 @@ export const MainPage = () => {
     setTitleSearchTerm("");
     setCitySearchTerm("");
     setFilteredEvents(events);
+    setOptions([]); // Reset options for AutoComplete
   };
 
   const allOptions = useMemo(() => {
@@ -59,10 +61,14 @@ export const MainPage = () => {
 
   const onSearch = (searchText) => {
     setTitleSearchTerm(searchText);
-    const filteredOptions = allOptions.filter((option) =>
-      option.value.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setOptions(filteredOptions);
+    if (searchText === "") {
+      setOptions(allOptions); // Show all options when search text is empty
+    } else {
+      const filteredOptions = allOptions.filter((option) =>
+        option.value.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setOptions(filteredOptions);
+    }
   };
 
   return (
@@ -82,6 +88,7 @@ export const MainPage = () => {
                 onSearch={onSearch}
                 onSelect={(value) => setTitleSearchTerm(value)}
                 onChange={(value) => setTitleSearchTerm(value)}
+                value={titleSearchTerm} // Add this line
               >
                 <Input size="large" placeholder="Search by title" />
               </AutoComplete>
@@ -112,7 +119,7 @@ export const MainPage = () => {
           <div
             className="grid grid-cols-1 gap-4 mx-auto lg:mx-0 md:grid-cols-2 lg:grid-cols-4"
             style={{ fontFamily: "inherit" }}>
-            {filteredEvents.map((event, key) => (
+            {filteredEvents.slice(0, displayCount).map((event, key) => (
               <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
                 <Card key={1}>
                   <Link href={event?.url} target="blank">
@@ -140,6 +147,17 @@ export const MainPage = () => {
                 </Card>
               </div>
             ))}
+          </div>
+          <div className="w-full flex justify-center mt-8">
+            {displayCount < filteredEvents.length && (
+              <Button
+                onClick={() => setDisplayCount(prevCount => prevCount + 60)}
+                type="primary"
+                size="large"
+              >
+                More events
+              </Button>
+            )}
           </div>
         </div>
       ) : (
