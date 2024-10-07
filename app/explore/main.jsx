@@ -31,8 +31,14 @@ export const MainPage = () => {
   ).map((title) => ({ value: title, label: title }));
 
   const cityOptions = Array.from(
-    new Set(events.map((event) => event?.city))
-  ).map((city) => ({ value: city, label: city }));
+    new Set(
+      events
+        .map((event) => event?.city)
+        .filter((city) => city && city.trim() !== "")
+    )
+  )
+    .sort()
+    .map((city) => ({ value: city, label: city }));
 
   const handleSearch = () => {
     const filtered = events.filter(
@@ -45,6 +51,7 @@ export const MainPage = () => {
           event?.city?.toLowerCase().includes(citySearchTerm.toLowerCase()))
     );
     setFilteredEvents(filtered);
+    setDisplayCount(60);
   };
 
   const handleClearSearch = () => {
@@ -52,6 +59,7 @@ export const MainPage = () => {
     setCitySearchTerm("");
     setFilteredEvents(events);
     setOptions([]); // Reset options for AutoComplete
+    setDisplayCount(60);
   };
 
   const allOptions = useMemo(() => {
@@ -69,6 +77,24 @@ export const MainPage = () => {
       );
       setOptions(filteredOptions);
     }
+  };
+
+
+  const truncateVenueName = (venueName, maxLength = 50) => {
+    if (!venueName) return '';
+
+    const commaIndex = venueName.indexOf(',');
+    if (commaIndex === -1) {
+      return venueName.length > maxLength ? venueName.substring(0, maxLength) + '...' : venueName;
+    }
+
+    const secondCommaIndex = venueName.indexOf(',', commaIndex + 1);
+    if (secondCommaIndex === -1) {
+      return venueName.length > maxLength ? venueName.substring(0, maxLength) + '...' : venueName;
+    }
+
+    const truncated = venueName.substring(0, secondCommaIndex).trim();
+    return truncated.length > maxLength ? truncated.substring(0, maxLength) + '...' : truncated;
   };
 
   return (
@@ -138,7 +164,7 @@ export const MainPage = () => {
                       <h1 className="text-xl font-bold font-pop text-white">
                         {event.title}
                       </h1>
-                      <h2 className="text-white">{event.venueNameData}</h2>
+                      <h2 className="text-white">{truncateVenueName(event.venueNameData)}</h2>
                       <p className="text-white">{event.eventStartDay}</p>
                       <p className="text-white">{event.eventStartTime || ""}</p>
                       <p className="text-white">{event.eventTimeZone || ""}</p>
@@ -150,13 +176,14 @@ export const MainPage = () => {
           </div>
           <div className="w-full flex justify-center mt-8">
             {displayCount < filteredEvents.length && (
-              <Button
+              <p
                 onClick={() => setDisplayCount(prevCount => prevCount + 60)}
                 type="primary"
                 size="large"
+                className="text-white hover:text-violet-500 text-xl mb-10 hover:cursor-pointer"
               >
                 More events
-              </Button>
+              </p>
             )}
           </div>
         </div>
