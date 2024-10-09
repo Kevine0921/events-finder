@@ -1,6 +1,6 @@
 <h2>✈World Events Finder App✈</h2>
 <p>The "World Events Finder App" is a comprehensive platform that enables users to discover events happening globally in real-time, with an interactive map powered by Mapbox.</p> 
-<p>Users can easily search for events based on location, category, and time, ensuring they never miss important activities or gatherings. With personalized recommendations and an intuitive interface, 
+<p>Users can easily search for events based on location, and title, ensuring they never miss important activities or gatherings. With personalized recommendations and an intuitive interface, 
 the app connects people to events ranging from concerts and festivals to conferences and cultural celebrations. It's the perfect tool for travelers, event enthusiasts, and anyone looking to explore happenings worldwide visually through a dynamic map experience.</p>
 </br>
 
