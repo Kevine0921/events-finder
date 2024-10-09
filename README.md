@@ -5,6 +5,7 @@ the app connects people to events ranging from concerts and festivals to confere
 </br>
 
 ![explore](https://github.com/benbasic00769/com-World-Events-Finder/blob/main/public/explore.jpg)
+![map](https://github.com/benbasic00769/com-World-Events-Finder/blob/main/public/map.jpg)
 
 </br>
 First, run the development server:
