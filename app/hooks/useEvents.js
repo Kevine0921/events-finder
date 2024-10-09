@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, useEffect, useCallback } fr
 import moment from "moment";
 import axios from "axios";
 import {getLumaEvents} from '../../util/getlumaevent'
+import {getMeetupEvents} from '../../util/getmeetupevent'
 
 const EventsContext = createContext();
 
@@ -108,6 +109,20 @@ export const EventsProvider = ({ children }) => {
           eventType: 'luma'
         })
       );
+
+      const meetupEvents = await getMeetupEvents();
+      const filteredmeetupEvents = meetupEvents.map(
+        (event) => ({
+          id: event?.id,
+          title: event?.name,
+          url: event?.url,
+          venueNameData: event?.group_name,
+          city: event?.city,
+          featureImage: event?.image_url,
+          eventTimeZone: event?.timezone,
+          eventType: 'meetup'
+        })
+      );
       // Combine events
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -117,7 +132,7 @@ export const EventsProvider = ({ children }) => {
         return array;
       }
 
-      const combinedEvents = shuffleArray([...filteredTicketEvents, ...filteredWeb3Events, ...filteredLumaEvents]);
+      const combinedEvents = shuffleArray([...filteredTicketEvents, ...filteredWeb3Events, ...filteredLumaEvents, ...filteredmeetupEvents]);
       
       // Cache the events and timestamp
       localStorage.setItem('cachedEvents', JSON.stringify(combinedEvents));
