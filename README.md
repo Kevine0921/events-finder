@@ -3,6 +3,10 @@
 <p>Users can easily search for events based on location, category, and time, ensuring they never miss important activities or gatherings. With personalized recommendations and an intuitive interface, 
 the app connects people to events ranging from concerts and festivals to conferences and cultural celebrations. It's the perfect tool for travelers, event enthusiasts, and anyone looking to explore happenings worldwide visually through a dynamic map experience.</p>
 </br>
+
+![explore](https://github.com/benbasic00769/com-World-Events-Finder/blob/main/public/explore.jpg)
+
+</br>
 First, run the development server:
 
 ```bash
