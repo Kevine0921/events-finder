@@ -12,7 +12,7 @@ import axios from "axios";
 export const MainPage = () => {
   const { events, loading } = useEvents();
   const [web3Data, setWeb3Data] = useState([]);
-  
+
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [titleSearchTerm, setTitleSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
@@ -24,21 +24,21 @@ export const MainPage = () => {
   useEffect(() => {
     setFilteredEvents(events);
   }, [events]);
-  console.log('=============events number==============', events?.length)
+  console.log('en', events?.length)
 
   const titleOptions = Array.from(
     new Set(events.map((event) => event?.title))
   ).map((title) => ({ value: title, label: title }));
 
   const cityOptions = Array.from(
-  new Set(
+    new Set(
       events
         .map((event) => event?.city)
         .filter((city) => city && city.trim() !== "")
     )
   )
-  .sort()
-  .map((city) => ({ value: city, label: city }));
+    .sort()
+    .map((city) => ({ value: city, label: city }));
 
   const handleSearch = () => {
     const filtered = events.filter(
@@ -62,38 +62,38 @@ export const MainPage = () => {
     setDisplayCount(60);
   };
 
-   const allOptions = useMemo(() => {
-      return Array.from(new Set(events.map((event) => event?.title)))
-        .map((title) => ({ value: title, label: title }));
-    }, [events]);
+  const allOptions = useMemo(() => {
+    return Array.from(new Set(events.map((event) => event?.title)))
+      .map((title) => ({ value: title, label: title }));
+  }, [events]);
 
-    const onSearch = (searchText) => {
-      setTitleSearchTerm(searchText);
-      if (searchText === "") {
-        setOptions(allOptions); // Show all options when search text is empty
-      } else {
-        const filteredOptions = allOptions.filter((option) =>
-          option.value.toLowerCase().includes(searchText.toLowerCase())
-        );
-        setOptions(filteredOptions);
-      }
-    };
+  const onSearch = (searchText) => {
+    setTitleSearchTerm(searchText);
+    if (searchText === "") {
+      setOptions(allOptions); // Show all options when search text is empty
+    } else {
+      const filteredOptions = allOptions.filter((option) =>
+        option.value.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setOptions(filteredOptions);
+    }
+  };
 
 
-    const truncateVenueName = (venueName) => {
-      if (!venueName) return '';
-      
-      const commas = venueName.split(',');
-      
-      if (commas.length <= 2) {
-        // If there are 2 or fewer comma-separated parts, return the whole string
-        return venueName;
-      } else {
-        // If there are more than 2 comma-separated parts, return the first two
-        return commas.slice(0, 2).join(',').trim();
-      }
-    };
- 
+  const truncateVenueName = (venueName) => {
+    if (!venueName) return '';
+
+    const commas = venueName.split(',');
+
+    if (commas.length <= 2) {
+      // If there are 2 or fewer comma-separated parts, return the whole string
+      return venueName;
+    } else {
+      // If there are more than 2 comma-separated parts, return the first two
+      return commas.slice(0, 2).join(',').trim();
+    }
+  };
+
   return (
     <div>
       {!loading ? (
@@ -105,7 +105,7 @@ export const MainPage = () => {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
-               <AutoComplete
+              <AutoComplete
                 className="w-full sm:w-64 lg:w-72"
                 options={options}
                 onSearch={onSearch}
@@ -144,27 +144,28 @@ export const MainPage = () => {
             style={{ fontFamily: "inherit" }}>
             {filteredEvents.slice(0, displayCount).map((event, key) => (
               <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
-                <Card key={1}>
+                <Card className="mb-2">
                   <Link href={event?.url} target="blank">
                     <div className="cursor-pointer w-full h-[400px] relative">
-                      <div className="cursor-pointer w-full h-[400px] relative">
-                        <Image
-                          className="rounded-xl overflow-hidden object-cover"
-                          src={event.featureImage}
-                          alt={event.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      </div>
+                      <Image
+                        className="rounded-t-xl overflow-hidden object-cover"
+                        src={event.featureImage}
+                        alt={event.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
                     </div>
-                    <div className="px-2">
-                      <h1 className="text-xl font-bold font-pop text-white">
+                    <div className="p-2 bg-gray-800 rounded-b-xl">
+                      <h1 className="text-lg font-semibold text-white truncate">
                         {event.title}
                       </h1>
-                      <h2 className="text-white">{truncateVenueName(event.venueNameData)}</h2>
-                      <p className="text-white">{event.eventStartDay}</p>
-                      <p className="text-white">{event.eventStartTime || ""}</p>
-                      <p className="text-white">{event.eventTimeZone || ""}</p>
+                      {event?.venueNameData ? (<p className="text-sm text-gray-300 truncate">{event?.venueNameData}</p>) : (<div><br></br></div>)}
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-lg text-gray-400 ">{event.city}</p>
+                        <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded-full">
+                          {event.eventType}
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 </Card>
@@ -173,9 +174,9 @@ export const MainPage = () => {
           </div>
           <div className="w-full flex justify-center mt-8">
             {displayCount < filteredEvents.length && (
-              <p 
+              <p
                 onClick={() => setDisplayCount(prevCount => prevCount + 60)}
-                type="primary" 
+                type="primary"
                 size="large"
                 className="text-white hover:text-violet-500 text-xl mb-10 hover:cursor-pointer"
               >

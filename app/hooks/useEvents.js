@@ -1,35 +1,44 @@
 "use client";
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import moment from "moment";
 import axios from "axios";
-import {getLumaEvents} from '../../util/getlumaevent'
-import {getMeetupEvents} from '../../util/getmeetupevent'
+import { getLumaEvents } from "../../util/getlumaevent";
+import { getMeetupEvents } from "../../util/getmeetupevent";
+import { Slice } from "lucide-react";
 
 const EventsContext = createContext();
 
 function getLargestImage(images) {
   return images.reduce((largest, current) => {
-    return (current.width * current.height > largest.width * largest.height) ? current : largest;
+    return current.width * current.height > largest.width * largest.height
+      ? current
+      : largest;
   }).url;
 }
 
 const fetchWeb3event = async () => {
   const data = {
-    "pages": 0,
-    "page_size": 0,
-    "status": 1,
-    "time": "",
-    "time_to": "",
-    "type": 1
+    pages: 0,
+    page_size: 0,
+    status: 1,
+    time: "",
+    time_to: "",
+    type: 1,
   };
   try {
-    const result = await axios.post(`/api/explore`, data)
+    const result = await axios.post(`/api/explore`, data);
     return result.data.data;
   } catch (error) {
-    console.error('Error fetching web3event data list:', error);
+    console.error("Error fetching web3event data list:", error);
     throw error;
-  };
-}
+  }
+};
 
 export const EventsProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
@@ -39,18 +48,22 @@ export const EventsProvider = ({ children }) => {
     setLoading(true);
     try {
       // Check if we have cached data
-      const cachedEvents = localStorage.getItem('cachedEvents');
-      const cachedTimestamp = localStorage.getItem('cachedTimestamp');
+      const cachedEvents = localStorage.getItem("cachedEvents");
+      const cachedTimestamp = localStorage.getItem("cachedTimestamp");
 
       // If we have cached data and it's less than 1 hour old, use it
-      if (cachedEvents && cachedTimestamp && (Date.now() - parseInt(cachedTimestamp)) < 360000) {
+      if (
+        cachedEvents &&
+        cachedTimestamp &&
+        Date.now() - parseInt(cachedTimestamp) < 360000
+      ) {
         setEvents(JSON.parse(cachedEvents));
         setLoading(false);
         return;
       }
 
       // Fetch ticket events
-      const response = await fetch('/api/explore')
+      const response = await fetch("/api/explore");
       const ticketData = await response.json();
 
       const currentDate = moment().format("YYYY-MM-DD");
@@ -62,67 +75,58 @@ export const EventsProvider = ({ children }) => {
           const dateData = event.dates.start.localDate;
           const dateCheck = moment(dateData).isBetween(
             startWeekDate,
-            endWeekDate,
+            endWeekDate
           );
           const cancelledCheck = event.dates.status.code;
           return dateCheck && cancelledCheck === "onsale";
         })
-        .map(
-          (event) => ({
-            id: event.id,
-            title: event.name,
-            url: event.url,
-            venueNameData: event._embedded?.venues[0]?.name,
-            city: event._embedded?.venues[0]?.city?.name,
-            featureImage: getLargestImage(event.images),
-            eventTimeZone: event.dates.timezone,
-            eventType: 'ticket'
-          }),
-        );
+        .map((event) => ({
+          id: event.id,
+          title: event.name,
+          url: event.url,
+          venueNameData: event._embedded?.venues[0]?.name,
+          city: event._embedded?.venues[0]?.city?.name,
+          featureImage: getLargestImage(event.images),
+          eventTimeZone: event.dates.timezone,
+          eventType: "TicketMaster",
+        }));
 
       // Fetch web3 events
       const web3Data = await fetchWeb3event();
-      const filteredWeb3Events = web3Data
-        .map(
-          (event) => ({
-            id: event.id,
-            title: event.title,
-            url: `https://www.web3event.org/event/${event.id}`,
-            venueNameData: event.addr,
-            city: event.city?.name,
-            featureImage: event?.image,
-            eventTimeZone: event?.timezone,
-            eventType: 'web3'
-          }),
-        );
+      const filteredWeb3Events = web3Data.map((event) => ({
+        id: event.id,
+        title: event.title,
+        url: `https://www.web3event.org/event/${event.id}`,
+        venueNameData: event.addr,
+        city: event?.city_name,
+        featureImage: event?.image,
+        eventTimeZone: event?.timezone,
+        eventType: "Web3event",
+      }));
 
       const lumaEvents = await getLumaEvents();
-      const filteredLumaEvents = lumaEvents.map(
-        (event) => ({
-          id: event.api_id,
-          title: event.name,
-          url: `https://lu.ma/${event.url}`,
-          venueNameData: event.full_address,
-          city: event.city,
-          featureImage: event.cover_url,
-          eventTimeZone: event.timezone,
-          eventType: 'luma'
-        })
-      );
+      const filteredLumaEvents = lumaEvents.map((event) => ({
+        id: event.api_id,
+        title: event.name,
+        url: `https://lu.ma/${event.url}`,
+        venueNameData: event.full_address,
+        city: event.city,
+        featureImage: event.cover_url,
+        eventTimeZone: event.timezone,
+        eventType: "Luma",
+      }));
 
       const meetupEvents = await getMeetupEvents();
-      const filteredmeetupEvents = meetupEvents.map(
-        (event) => ({
-          id: event?.id,
-          title: event?.name,
-          url: event?.url,
-          venueNameData: event?.group_name,
-          city: event?.city,
-          featureImage: event?.image_url,
-          eventTimeZone: event?.timezone,
-          eventType: 'meetup'
-        })
-      );
+      const filteredmeetupEvents = meetupEvents.map((event) => ({
+        id: event?.id,
+        title: event?.name,
+        url: event?.url,
+        venueNameData: event?.group_name,
+        city: event?.city,
+        featureImage: event?.image_url,
+        eventTimeZone: event?.timezone,
+        eventType: "Meetup",
+      }));
       // Combine events
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -132,11 +136,16 @@ export const EventsProvider = ({ children }) => {
         return array;
       }
 
-      const combinedEvents = shuffleArray([...filteredTicketEvents, ...filteredWeb3Events, ...filteredLumaEvents, ...filteredmeetupEvents]);
-      
+      const combinedEvents = shuffleArray([
+        ...filteredTicketEvents,
+        ...filteredWeb3Events,
+        ...filteredLumaEvents,
+        ...filteredmeetupEvents,
+      ]);
+
       // Cache the events and timestamp
-      localStorage.setItem('cachedEvents', JSON.stringify(combinedEvents));
-      localStorage.setItem('cachedTimestamp', Date.now().toString());
+      localStorage.setItem("cachedEvents", JSON.stringify(combinedEvents));
+      localStorage.setItem("cachedTimestamp", Date.now().toString());
 
       setEvents(combinedEvents);
     } catch (error) {
@@ -151,7 +160,8 @@ export const EventsProvider = ({ children }) => {
   }, [getAllEvents]);
 
   return (
-    <EventsContext.Provider value={{ events, loading, refreshEvents: getAllEvents }}>
+    <EventsContext.Provider
+      value={{ events, loading, refreshEvents: getAllEvents }}>
       {children}
     </EventsContext.Provider>
   );
@@ -160,7 +170,7 @@ export const EventsProvider = ({ children }) => {
 export const useEvents = () => {
   const context = useContext(EventsContext);
   if (context === undefined) {
-    throw new Error('useEvents must be used within an EventsProvider');
+    throw new Error("useEvents must be used within an EventsProvider");
   }
   return context;
 };
