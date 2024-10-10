@@ -30,15 +30,27 @@ export const MainPage = () => {
     new Set(events.map((event) => event?.title))
   ).map((title) => ({ value: title, label: title }));
 
+
+
+  const formatCityName = (cityName) => {
+    // Remove 'city' and spaces, then capitalize only the first letter
+    return cityName
+      .replace(/\s*city\s*/i, '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
+      .replace(/^(.)/, match => match.toUpperCase());
+  };
+
   const cityOptions = Array.from(
     new Set(
       events
         .map((event) => event?.city)
         .filter((city) => city && city.trim() !== "")
+        .map(formatCityName)  // Apply formatting before deduplication
     )
   )
-    .sort()
-    .map((city) => ({ value: city, label: city }));
+    .map((city) => ({ value: city, label: city }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const handleSearch = () => {
     const filtered = events.filter(
