@@ -161,9 +161,11 @@ export const MainPage = () => {
                       </h1>
                       {event?.venueNameData ? (<p className="text-sm text-gray-300 truncate">{event?.venueNameData}</p>) : (<div><br></br></div>)}
                       <div className="flex justify-between items-center mt-2">
-                        <p className="text-lg text-gray-400 ">{event.city}</p>
+                        {event?.city ? (<span className="text-xl bg-green-500 text-white px-2 py-1 rounded-full">
+                          {event?.city}
+                        </span>) : (<div></div>)}
                         <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded-full">
-                          {event.eventType}
+                          {event?.eventType}
                         </span>
                       </div>
                     </div>
