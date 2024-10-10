@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import re
 import time
 import json
+from dateutil import parser as date_parser
 import random
 
 def setup_driver():
@@ -189,18 +190,29 @@ def parse_meetup_event(event_element, city, city_coordinates):
 
 
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
+import random
+import time
+
 def scrape_meetup_events(url, driver, city_coordinates):
     city = extract_city_from_url(url)
     driver.get(url)
     
-    # Wait for the events to load
-    WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'div.flex.h-full.break-words'))
-    )
+    try:
+        # Wait for the events to load
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'div.flex.h-full.break-words'))
+        )
+    except TimeoutException:
+        print(f"Timeout occurred while loading events for URL: {url}. Skipping this URL.")
+        return []  # Return an empty list to indicate no events were scraped
     
     events = []
     event_count = 0
-    max_events = random.randint(20, 30)  # Limit to 20 events
+    max_events = random.randint(20, 30)  # Limit to 20-30 events
 
     while event_count < max_events:
         event_cards = driver.find_elements(By.CSS_SELECTOR, 'div.flex.h-full.break-words')
@@ -208,7 +220,7 @@ def scrape_meetup_events(url, driver, city_coordinates):
         for card in event_cards[event_count:]:
             if event_count >= max_events:
                 break
-            event = parse_meetup_event(card,city, city_coordinates)
+            event = parse_meetup_event(card, city, city_coordinates)
             if event.get('link'):
                 events.append(event)
                 event_count += 1
@@ -226,8 +238,6 @@ def scrape_meetup_events(url, driver, city_coordinates):
 
     return events
 
-
-
 def main():
     urls = [
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=fi--Helsinki",
@@ -236,7 +246,7 @@ def main():
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=cn--Beijing",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=in--NewDelhi",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=id--Jakarta",
-        "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=my--KualaLumpur",
+        "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=my--Kuala Lumpur",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ph--Manila",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=qa--Doha",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=sa--Riyadh",
@@ -277,7 +287,7 @@ def main():
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Quebec",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Hamilton",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Kitchener",
-        "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--London",
+        "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--qc--Qu%C3%A9bec",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Victoria",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Halifax",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ca--Oshawa",
@@ -318,7 +328,7 @@ def main():
     finally:
         driver.quit()
     
-    filename = "meetup_events_eu.json"
+    filename = "meetup_events.json"
     
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(all_events, f, ensure_ascii=False, indent=4)
