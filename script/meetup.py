@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from datetime import datetime, timedelta
 import re
 import time
@@ -134,9 +135,9 @@ def parse_meetup_event(event_element, city, city_coordinates):
             else:
                 print(f"Found element with selector but href is empty")
         except NoSuchElementException:
-            print(f"Selector failed: ")
+            print(f"Selector failed: {selector}")
         except Exception as e:
-            print(f"Error with selector")
+            print(f"Error with selector {selector}: {str(e)}")
 
     if 'link' not in event or event['link'] is None:
         print("Failed to find link with all selectors. Trying to find any 'a' tag.")
@@ -149,7 +150,7 @@ def parse_meetup_event(event_element, city, city_coordinates):
                     print(f"Found link in 'a' tag: {href}")
                     break
         except Exception as e:
-            print(f"Error finding any 'a' tags: ")
+            print(f"Error finding any 'a' tags: {str(e)}")
 
     if 'link' not in event or event['link'] is None:
         print("Failed to find any suitable link.")
@@ -159,7 +160,7 @@ def parse_meetup_event(event_element, city, city_coordinates):
         title_elem = event_element.find_element(By.CSS_SELECTOR, 'h2.text-gray7.font-medium.text-base')
         event['title'] = title_elem.text.strip()
     except Exception as e:
-        print(f"Error finding event title: ")
+        print(f"Error finding event title: {str(e)}")
         event['title'] = None
 
     # Group name
@@ -169,13 +170,25 @@ def parse_meetup_event(event_element, city, city_coordinates):
     except Exception as e:
         event['group_name'] = None
 
+    # Event date
+    try:
+        time_elem = event_element.find_element(By.CSS_SELECTOR, 'time')
+        datetime_str = time_elem.get_attribute('datetime')
+        # Remove the timezone identifier in square brackets
+        datetime_str = datetime_str.split('[')[0]
+        event_datetime = datetime.fromisoformat(datetime_str)
+        # Convert datetime to ISO format string
+        event['date'] = event_datetime.isoformat()
+    except Exception as e:
+        print(f"Error finding event date: {str(e)}")
+        event['date'] = None
 
     # Event image
     try:
         img_elem = event_element.find_element(By.CSS_SELECTOR, 'img[decoding="async"][data-nimg="1"]')
         event['image_url'] = get_high_res_image_url(img_elem.get_attribute('src'))
     except Exception as e:
-        print(f"Error finding event image: ")
+        print(f"Error finding event image: {str(e)}")
         event['image_url'] = None
 
     event['city'] = city
@@ -190,12 +203,6 @@ def parse_meetup_event(event_element, city, city_coordinates):
 
 
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-import random
-import time
 
 def scrape_meetup_events(url, driver, city_coordinates):
     city = extract_city_from_url(url)
@@ -317,6 +324,7 @@ def main():
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=dk--Aarhus",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=ro--Cluj-Napoca",
         "https://www.meetup.com/find/?source=EVENTS&eventType=inPerson&sortField=DATETIME&location=gr--Thessaloniki"
+      
     ]
     all_events = []
     

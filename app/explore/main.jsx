@@ -5,9 +5,12 @@ import { LoadingComponent } from "@/app/components/loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useEvents } from "../hooks/useEvents";
-import { AutoComplete, Input, Button } from "antd";
+import { AutoComplete, Input, Button, DatePicker } from "antd";
 import { fetchWeb3event } from "../api/fetchdata";
 import axios from "axios";
+import moment from "moment";
+
+const { RangePicker } = DatePicker;
 
 export const MainPage = () => {
   const { events, loading } = useEvents();
@@ -16,6 +19,7 @@ export const MainPage = () => {
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [titleSearchTerm, setTitleSearchTerm] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [dateRange, setDateRange] = useState(null);
   const [options, setOptions] = useState([]);
   const [displayCount, setDisplayCount] = useState(60);
 
@@ -53,23 +57,28 @@ export const MainPage = () => {
     .sort((a, b) => a.label.localeCompare(b.label));
 
   const handleSearch = () => {
-    const filtered = events.filter(
-      (event) =>
+    const filtered = events.filter((event) => {
+      const eventDate = moment(event?.date, 'YYYY-MM-DD');
+      return (
         (titleSearchTerm === "" ||
-          event?.title
-            ?.toLowerCase()
-            .includes(titleSearchTerm.toLowerCase())) &&
+          event?.title?.toLowerCase().includes(titleSearchTerm.toLowerCase())) &&
         (citySearchTerm === "" ||
-          event?.city?.toLowerCase().includes(citySearchTerm.toLowerCase()))
-    );
+          event?.city?.toLowerCase().includes(citySearchTerm.toLowerCase())) &&
+        (!dateRange ||
+          (eventDate.isSameOrAfter(dateRange[0], 'day') &&
+            eventDate.isSameOrBefore(dateRange[1], 'day')))
+      );
+    });
     setFilteredEvents(filtered);
     setDisplayCount(60);
+    console.log(dateRange[0])
   };
 
   const handleClearSearch = () => {
     setTitleSearchTerm("");
     setCitySearchTerm("");
     setFilteredEvents(events);
+    setDateRange(null);
     setOptions([]); // Reset options for AutoComplete
     setDisplayCount(60);
   };
@@ -107,16 +116,17 @@ export const MainPage = () => {
   };
 
   return (
-    <div>
+    <div style={{ fontFamily: 'Exo' }}>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
           <div className="flex flex-col lg:flex-row w-full items-center justify-between p-4 space-y-4 lg:space-y-0">
-            <div className="w-full lg:w-auto text-center lg:text-left lg:pl-8">
-              <p className="text-white">
-                You can explore all events here.
-              </p>
-            </div>
+
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
+              <div className="w-full lg:w-auto text-center lg:text-left lg:pl-8">
+                <p className="text-white text-2xl">
+                  You can explore all events here.
+                </p>
+              </div>
               <AutoComplete
                 className="w-full sm:w-64 lg:w-72"
                 options={options}
@@ -124,8 +134,9 @@ export const MainPage = () => {
                 onSelect={(value) => setTitleSearchTerm(value)}
                 onChange={(value) => setTitleSearchTerm(value)}
                 value={titleSearchTerm} // Add this line
+                style={{ fontFamily: 'Exo' }}
               >
-                <Input size="large" placeholder="Search by title" />
+                <Input size="large" placeholder="Search by title" style={{ fontFamily: 'Exo' }} />
               </AutoComplete>
               <AutoComplete
                 className="w-full sm:w-64 lg:w-72"
@@ -136,14 +147,25 @@ export const MainPage = () => {
                 onSelect={(value) => setCitySearchTerm(value)}
                 onChange={(value) => setCitySearchTerm(value)}
                 value={citySearchTerm}
+                style={{ fontFamily: 'Exo' }}
               >
-                <Input size="large" placeholder="Search by city" />
+                <Input size="large" placeholder="Search by city" style={{ fontFamily: 'Exo' }} />
               </AutoComplete>
+              <RangePicker
+                className="w-full sm:w-64 lg:w-72"
+                size="large"
+                onChange={(dates) => {
+                  setDateRange(dates ? [dates[0].startOf('day'), dates[1].endOf('day')] : null);
+                }}
+                value={dateRange}
+                format="YYYY-MM-DD"
+                style={{ fontFamily: 'Exo' }}
+              />
               <div className="flex space-x-4 w-full sm:w-auto">
-                <Button onClick={handleSearch} type="primary" size="large" className="flex-1 sm:flex-none">
+                <Button onClick={handleSearch} type="primary" size="large" className="flex-1 sm:flex-none" style={{ fontFamily: 'Exo' }}>
                   Search
                 </Button>
-                <Button onClick={handleClearSearch} type="primary" size="large" className="flex-1 sm:flex-none hover:bg-pink-500">
+                <Button onClick={handleClearSearch} type="primary" size="large" className="flex-1 sm:flex-none hover:bg-pink-500" style={{ fontFamily: 'Exo' }}>
                   Clear
                 </Button>
               </div>
@@ -168,15 +190,15 @@ export const MainPage = () => {
                       />
                     </div>
                     <div className="p-2 bg-gray-800 rounded-b-xl">
-                      <h1 className="text-lg font-semibold text-white truncate">
+                      <h1 className="text-2xl font-semibold text-white truncate">
                         {event.title}
                       </h1>
-                      {event?.venueNameData ? (<p className="text-sm text-gray-300 truncate">{event?.venueNameData}</p>) : (<div><br></br></div>)}
+                      {event?.venueNameData ? (<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>) : (<div><br></br></div>)}
                       <div className="flex justify-between items-center mt-2">
-                        {event?.city ? (<span className="text-xl bg-green-500 text-white px-2 py-1 rounded-full">
+                        {event?.city ? (<span className="text-2xl bg-green-500 text-white px-2 py-1 rounded-full">
                           {event?.city}
                         </span>) : (<div></div>)}
-                        <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded-full">
+                        <span className="text-xl bg-purple-600 text-white px-2 py-1 rounded-full">
                           {event?.eventType}
                         </span>
                       </div>

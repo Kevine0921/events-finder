@@ -88,11 +88,17 @@ export const EventsProvider = ({ children }) => {
           city: event._embedded?.venues[0]?.city?.name,
           featureImage: getLargestImage(event.images),
           eventTimeZone: event.dates.timezone,
+          date: event?.dates?.start?.localDate,
           eventType: "TicketMaster",
         }));
 
+      console.log(
+        "==========filteredTicketEvents==",
+        filteredTicketEvents.slice(0, 2)
+      );
       // Fetch web3 events
       const web3Data = await fetchWeb3event();
+      console.log("==========web3 sample==", web3Data.slice(0, 2));
       const filteredWeb3Events = web3Data.map((event) => ({
         id: event.id,
         title: event.title,
@@ -101,9 +107,15 @@ export const EventsProvider = ({ children }) => {
         city: event?.city_name,
         featureImage: event?.image,
         eventTimeZone: event?.timezone,
+        date: event?.start_time
+          ? moment(event.start_time).format("YYYY-MM-DD")
+          : null,
         eventType: "Web3event",
       }));
-
+      console.log(
+        "==========filteredWeb3Events==",
+        filteredWeb3Events.slice(0, 2)
+      );
       const lumaEvents = await getLumaEvents();
       const filteredLumaEvents = lumaEvents.map((event) => ({
         id: event.api_id,
@@ -113,8 +125,14 @@ export const EventsProvider = ({ children }) => {
         city: event.city,
         featureImage: event.cover_url,
         eventTimeZone: event.timezone,
+        date: event?.start_at,
         eventType: "Luma",
       }));
+
+      console.log(
+        "==========filteredLumaEvents==",
+        filteredWeb3Events.slice(0, 2)
+      );
 
       const meetupEvents = await getMeetupEvents();
       const filteredmeetupEvents = meetupEvents.map((event) => ({
@@ -125,6 +143,7 @@ export const EventsProvider = ({ children }) => {
         city: event?.city,
         featureImage: event?.image_url,
         eventTimeZone: event?.timezone,
+        date: event?.date ? moment(event.date).format("YYYY-MM-DD") : null,
         eventType: "Meetup",
       }));
       // Combine events
