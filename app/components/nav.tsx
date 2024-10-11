@@ -70,12 +70,12 @@ export const Navigation: React.FC = () => {
             <div className="flex justify-around gap-6 items-center">
               <Link
                 href="/explore"
-                className="duration-200 py-3 rounded-lg text-violet-500 hover:text-zinc-100 text-center font-medium text-xl md:text-2xl">
+                className="duration-200 py-3 rounded-lg text-violet-500 hover:text-zinc-100 text-center text-xl md:text-2xl font-bold">
                 Explore
               </Link>
               <Link
                 href="/map"
-                className="duration-200 py-3 rounded-lg text-violet-500 hover:text-zinc-100 text-center font-medium text-xl md:text-2xl">
+                className="duration-200 py-3 rounded-lg text-violet-500 hover:text-zinc-100 text-center font-bold text-xl md:text-2xl">
                 Map
               </Link>
             </div>

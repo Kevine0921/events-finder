@@ -91,14 +91,8 @@ export const EventsProvider = ({ children }) => {
           date: event?.dates?.start?.localDate,
           eventType: "TicketMaster",
         }));
-
-      console.log(
-        "==========filteredTicketEvents==",
-        filteredTicketEvents.slice(0, 2)
-      );
       // Fetch web3 events
       const web3Data = await fetchWeb3event();
-      console.log("==========web3 sample==", web3Data.slice(0, 2));
       const filteredWeb3Events = web3Data.map((event) => ({
         id: event.id,
         title: event.title,
@@ -112,10 +106,6 @@ export const EventsProvider = ({ children }) => {
           : null,
         eventType: "Web3event",
       }));
-      console.log(
-        "==========filteredWeb3Events==",
-        filteredWeb3Events.slice(0, 2)
-      );
       const lumaEvents = await getLumaEvents();
       const filteredLumaEvents = lumaEvents.map((event) => ({
         id: event.api_id,
@@ -128,11 +118,6 @@ export const EventsProvider = ({ children }) => {
         date: event?.start_at,
         eventType: "Luma",
       }));
-
-      console.log(
-        "==========filteredLumaEvents==",
-        filteredWeb3Events.slice(0, 2)
-      );
 
       const meetupEvents = await getMeetupEvents();
       const filteredmeetupEvents = meetupEvents.map((event) => ({

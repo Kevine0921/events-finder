@@ -71,7 +71,6 @@ export const MainPage = () => {
     });
     setFilteredEvents(filtered);
     setDisplayCount(60);
-    console.log(dateRange[0])
   };
 
   const handleClearSearch = () => {
