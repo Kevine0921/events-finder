@@ -115,7 +115,9 @@ export const EventsProvider = ({ children }) => {
         city: event.city,
         featureImage: event.cover_url,
         eventTimeZone: event.timezone,
-        date: event?.start_at,
+        date: event?.start_at
+          ? moment(event?.start_at).format("YYYY-MM-DD")
+          : null,
         eventType: "Luma",
       }));
 
