@@ -123,7 +123,7 @@ export const MainPage = () => {
     <div style={{ fontFamily: 'Exo' }}>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
-          <div className="flex flex-col items-center w-full space-y-4 p-4 bg-gray-800 rounded-lg shadow-sm">
+          <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <AutoComplete
                 className="w-full"
@@ -169,7 +169,7 @@ export const MainPage = () => {
               />
             </div>
 
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-4 mt-1">
               <Button
                 onClick={handleSearch}
                 type="default"
@@ -197,7 +197,7 @@ export const MainPage = () => {
             style={{ fontFamily: "inherit" }}>
             {filteredEvents.slice(0, displayCount).map((event, key) => (
               <div key={key} className="grid grid-cols-1 gap-4 cursor-pointer">
-                <Card className="mb-2">
+                <Card className="">
                   <Link href={event?.url} target="blank">
                     <div className="cursor-pointer w-full h-[400px] relative">
                       <Image
@@ -208,22 +208,22 @@ export const MainPage = () => {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
-                    <div className="p-2 bg-gray-800 rounded-b-xl">
-                      {event?.date ? (<p className="text-xl text-gray-300 truncate">{event?.date}</p>) : (<div><br></br></div>)}
+                    <div className="p-2 rounded-b-xl">
 
-                      {/* {event?.venueNameData?(<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>):(<div><br></br></div>)} */}
-
-                      <div className="flex justify-between items-center mt-2">
-                        {event?.city ? (<span className="text-2xl bg-green-500 text-white px-2 py-1 rounded-full">
-                          {event?.city}
-                        </span>) : (<div></div>)}
-                        <span className="text-xl bg-purple-600 text-white px-2 py-1 rounded-full">
-                          {event?.eventType}
-                        </span>
-                      </div>
                       <h1 className="text-2xl font-semibold text-white truncate">
                         {event.title}
                       </h1>
+                      {/* {event?.venueNameData?(<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>):(<div><br></br></div>)} */}
+
+                      <div className="flex justify-between items-center">
+                        {event?.city ? (<span className="text-2xl bg-yellow-500 text-black px-2 py-1 rounded-full">
+                          {event?.city}
+                        </span>) : (<div></div>)}
+                        {event?.date ? (<p className="text-xl text-white truncate">{event?.date}</p>) : (<div></div>)}
+                        <span className="text-xl bg-yellow-500 text-black px-2 py-1 rounded-full">
+                          {event?.eventType}
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 </Card>
