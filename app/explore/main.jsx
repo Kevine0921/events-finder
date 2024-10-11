@@ -123,8 +123,8 @@ export const MainPage = () => {
     <div style={{ fontFamily: 'Exo' }}>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
-          <div className="flex flex-col w-full space-y-4 p-1 bg-gray-800 rounded-lg shadow-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex flex-col items-center w-full space-y-4 p-4 bg-gray-800 rounded-lg shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <AutoComplete
                 className="w-full"
                 options={options}
@@ -167,27 +167,27 @@ export const MainPage = () => {
                 format="YYYY-MM-DD"
                 style={inputStyle}
               />
+            </div>
 
-              <div className="flex space-x-2">
-                <Button
-                  onClick={handleSearch}
-                  type="default"
-                  size="large"
-                  className="flex-1 bg-purple-600 text-white"
-                  style={{ fontFamily: 'Exo' }}
-                >
-                  Search
-                </Button>
-                <Button
-                  onClick={handleClearSearch}
-                  type="default"
-                  size="large"
-                  className="flex-1 bg-purple-600 text-white"
-                  style={{ fontFamily: 'Exo' }}
-                >
-                  Clear
-                </Button>
-              </div>
+            <div className="flex space-x-4 mt-4">
+              <Button
+                onClick={handleSearch}
+                type="default"
+                size="large"
+                className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                style={{ fontFamily: 'Exo' }}
+              >
+                Search
+              </Button>
+              <Button
+                onClick={handleClearSearch}
+                type="default"
+                size="large"
+                className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                style={{ fontFamily: 'Exo' }}
+              >
+                Clear
+              </Button>
             </div>
           </div>
           <div className="w-full h-px bg-zinc-800 my-4" />
@@ -210,9 +210,7 @@ export const MainPage = () => {
                     </div>
                     <div className="p-2 bg-gray-800 rounded-b-xl">
                       {event?.date ? (<p className="text-xl text-gray-300 truncate">{event?.date}</p>) : (<div><br></br></div>)}
-                      <h1 className="text-2xl font-semibold text-white truncate">
-                        {event.title}
-                      </h1>
+
                       {/* {event?.venueNameData?(<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>):(<div><br></br></div>)} */}
 
                       <div className="flex justify-between items-center mt-2">
@@ -223,6 +221,9 @@ export const MainPage = () => {
                           {event?.eventType}
                         </span>
                       </div>
+                      <h1 className="text-2xl font-semibold text-white truncate">
+                        {event.title}
+                      </h1>
                     </div>
                   </Link>
                 </Card>
