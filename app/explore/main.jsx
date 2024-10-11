@@ -113,32 +113,35 @@ export const MainPage = () => {
       return commas.slice(0, 2).join(',').trim();
     }
   };
+  const inputStyle = {
+    fontFamily: 'Exo',
+    height: '40px',
+    fontSize: '16px',
+  };
 
   return (
     <div style={{ fontFamily: 'Exo' }}>
       {!loading ? (
         <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
-          <div className="flex flex-col lg:flex-row w-full items-center justify-between p-4 space-y-4 lg:space-y-0">
-
-            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
-              <div className="w-full lg:w-auto text-center lg:text-left lg:pl-8">
-                <p className="text-white text-2xl">
-                  You can explore all events here.
-                </p>
-              </div>
+          <div className="flex flex-col w-full space-y-4 p-1 bg-gray-800 rounded-lg shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <AutoComplete
-                className="w-full sm:w-64 lg:w-72"
+                className="w-full"
                 options={options}
                 onSearch={onSearch}
                 onSelect={(value) => setTitleSearchTerm(value)}
                 onChange={(value) => setTitleSearchTerm(value)}
-                value={titleSearchTerm} // Add this line
-                style={{ fontFamily: 'Exo' }}
+                value={titleSearchTerm}
               >
-                <Input size="large" placeholder="Search by title" style={{ fontFamily: 'Exo' }} />
+                <Input
+                  size="large"
+                  placeholder="Search by title"
+                  style={inputStyle}
+                />
               </AutoComplete>
+
               <AutoComplete
-                className="w-full sm:w-64 lg:w-72"
+                className="w-full"
                 options={cityOptions}
                 filterOption={(inputValue, option) =>
                   option?.value?.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
@@ -146,25 +149,42 @@ export const MainPage = () => {
                 onSelect={(value) => setCitySearchTerm(value)}
                 onChange={(value) => setCitySearchTerm(value)}
                 value={citySearchTerm}
-                style={{ fontFamily: 'Exo' }}
               >
-                <Input size="large" placeholder="Search by city" style={{ fontFamily: 'Exo' }} />
+                <Input
+                  size="large"
+                  placeholder="Search by city"
+                  style={inputStyle}
+                />
               </AutoComplete>
+
               <RangePicker
-                className="w-full sm:w-64 lg:w-72"
+                className="w-full"
                 size="large"
                 onChange={(dates) => {
                   setDateRange(dates ? [dates[0].startOf('day'), dates[1].endOf('day')] : null);
                 }}
                 value={dateRange}
                 format="YYYY-MM-DD"
-                style={{ fontFamily: 'Exo' }}
+                style={inputStyle}
               />
-              <div className="flex space-x-4 w-full sm:w-auto">
-                <Button onClick={handleSearch} type="primary" size="large" className="flex-1 sm:flex-none" style={{ fontFamily: 'Exo' }}>
+
+              <div className="flex space-x-2">
+                <Button
+                  onClick={handleSearch}
+                  type="default"
+                  size="large"
+                  className="flex-1 bg-purple-600 text-white"
+                  style={{ fontFamily: 'Exo' }}
+                >
                   Search
                 </Button>
-                <Button onClick={handleClearSearch} type="primary" size="large" className="flex-1 sm:flex-none hover:bg-pink-500" style={{ fontFamily: 'Exo' }}>
+                <Button
+                  onClick={handleClearSearch}
+                  type="default"
+                  size="large"
+                  className="flex-1 bg-purple-600 text-white"
+                  style={{ fontFamily: 'Exo' }}
+                >
                   Clear
                 </Button>
               </div>
@@ -189,11 +209,12 @@ export const MainPage = () => {
                       />
                     </div>
                     <div className="p-2 bg-gray-800 rounded-b-xl">
+                      {event?.date ? (<p className="text-xl text-gray-300 truncate">{event?.date}</p>) : (<div><br></br></div>)}
                       <h1 className="text-2xl font-semibold text-white truncate">
                         {event.title}
                       </h1>
-                      {event?.venueNameData ? (<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>) : (<div><br></br></div>)}
-                      {event?.date ? (<p className="text-xl text-gray-300 truncate">{event?.date}</p>) : (<div><br></br></div>)}
+                      {/* {event?.venueNameData?(<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>):(<div><br></br></div>)} */}
+
                       <div className="flex justify-between items-center mt-2">
                         {event?.city ? (<span className="text-2xl bg-green-500 text-white px-2 py-1 rounded-full">
                           {event?.city}
