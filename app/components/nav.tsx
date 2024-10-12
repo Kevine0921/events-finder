@@ -66,7 +66,7 @@ export const Navigation: React.FC = () => {
           </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex flex-row justify-between items-center w-full ml-8">
+          {/* <div className="hidden md:flex flex-row justify-between items-center w-full ml-8">
             <div className="flex justify-around gap-6 items-center">
               <Link
                 href="/explore"
@@ -79,7 +79,7 @@ export const Navigation: React.FC = () => {
                 Map
               </Link>
             </div>
-            {/* <div className="flex justify-around gap-6 items-center">
+            <div className="flex justify-around gap-6 items-center">
               <button
                 onClick={handleAuth}
                 className="duration-200 py-2 px-4 rounded-lg bg-violet-500 text-white hover:bg-violet-600 text-center font-medium text-lg"
@@ -96,12 +96,12 @@ export const Navigation: React.FC = () => {
                   <span className="text-zinc-100">{session.user?.name}</span>
                 </div>
               )}
-            </div> */}
-          </div>
+            </div>
+          </div> */}
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
+        {/* {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link
@@ -114,28 +114,10 @@ export const Navigation: React.FC = () => {
                 className="block px-3 py-2 rounded-md text-base font-medium text-violet-500 hover:text-zinc-100 hover:bg-violet-700">
                 Map
               </Link>
-              {/* <button
-                onClick={handleAuth}
-                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-violet-500 hover:text-zinc-100 hover:bg-violet-700"
-              >
-                {session ? 'Logout' : 'Login'}
-              </button> */}
+             
             </div>
-            {/* {session && (
-              <div className="pt-4 pb-3 border-t border-zinc-700">
-                <div className="flex items-center px-5">
-                  <div className="flex-shrink-0">
-                    <img className="h-10 w-10 rounded-full" src={session.user?.image || ''} alt="User avatar" />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-zinc-100">{session.user?.name}</div>
-                    <div className="text-sm font-medium leading-none text-zinc-400">{session.user?.email}</div>
-                  </div>
-                </div>
-              </div>
-            )} */}
           </div>
-        )}
+        )} */}
       </div>
     </header>
   );

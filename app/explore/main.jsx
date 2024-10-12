@@ -216,11 +216,11 @@ export const MainPage = () => {
                       {/* {event?.venueNameData?(<p className="text-xl text-gray-300 truncate">{event?.venueNameData}</p>):(<div><br></br></div>)} */}
 
                       <div className="flex justify-between items-center">
-                        {event?.city ? (<span className="text-2xl bg-yellow-500 text-black px-2 py-1 rounded-full">
+                        {event?.city ? (<span className="text-2xl bg-red-400 text-black px-2 py-1 rounded-full">
                           {event?.city}
                         </span>) : (<div></div>)}
-                        {event?.date ? (<p className="text-xl text-white truncate">{event?.date}</p>) : (<div></div>)}
-                        <span className="text-xl bg-yellow-500 text-black px-2 py-1 rounded-full">
+                        {event?.date ? (<span className="text-lg bg-yellow-400 text-black px-2 py-1 rounded-full">{event?.date}</span>) : (<div></div>)}
+                        <span className="text-xl bg-blue-500 text-black px-2 py-1 rounded-full">
                           {event?.eventType}
                         </span>
                       </div>
