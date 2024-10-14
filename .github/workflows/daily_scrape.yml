@@ -18,15 +18,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r script/requirements.txt
+          pip list  # This will show all installed packages
       - name: Run scrapers
         run: |
+          echo "Current directory: $(pwd)"
+          echo "Content of script directory:"
+          ls -l script/
           echo "Running meetup.py..."
-          python script/meetup.py || { echo "meetup.py failed"; cat error_meetup.log; exit 1; }
+          python -v script/meetup.py || { echo "meetup.py failed"; cat error_meetup.log; exit 1; }
           echo "Running luma.py..."
-          python script/luma.py || { echo "luma.py failed"; cat error_luma.log; exit 1; }
+          python -v script/luma.py || { echo "luma.py failed"; cat error_luma.log; exit 1; }
       - name: Commit and push if changed
         run: |
           git config --global user.name 'benbasic00769'
           git config --global user.email 'asamieto965@gmail.com'
           git add *.json
+          git status  # This will show which files have changed
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update event data" && git push)
