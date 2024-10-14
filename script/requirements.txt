@@ -4,3 +4,4 @@ requests
 schedule
 selenium
 httpx
+aiolimiter
