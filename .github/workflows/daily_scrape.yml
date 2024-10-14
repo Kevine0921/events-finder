@@ -16,7 +16,7 @@ jobs:
           python-version: "3.12.0"
       - name: Activate virtual environment and run scrapers
         run: |
-          source script/venv/bin/activate
+          source script/venv/script/activate
           python script/meetup.py
           python script/luma.py
       - name: Commit and push if changed
