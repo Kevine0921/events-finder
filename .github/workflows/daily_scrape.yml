@@ -2,7 +2,7 @@ name: Daily Scraping
 
 on:
   schedule:
-    - cron: "30 8 * * *" # Run every day at 8:30 AM UTC (3:30 AM EST / 4:30 AM EDT)
+    - cron: "30 3 * * *" # Run every day at 8:30 AM UTC (3:30 AM EST / 4:30 AM EDT)
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -32,8 +32,8 @@ jobs:
           python -v script/luma.py > luma_output.log 2>&1 || { echo "luma.py failed"; cat luma_output.log; exit 1; }
       - name: Commit and push if changed
         run: |
-          git config --global user.name benbasic00769
-          git config --global user.email shottree657@gmail.com
+          git config --global user.name bagus0300
+          git config --global user.email asamieto965@gmail.com
           git add *.json
           git status
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update event data" && git push)
