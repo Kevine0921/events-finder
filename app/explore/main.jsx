@@ -154,6 +154,7 @@ export const MainPage = () => {
     fontSize: "16px",
   };
 
+  console.log("====date==", dateRange);
   return (
     <ConfigProvider
       theme={{
@@ -168,7 +169,7 @@ export const MainPage = () => {
         {!loading ? (
           <div className="px-6 pt-[100px] mx-auto max-w-[100rem] lg:px-8">
             <div className="flex flex-col items-center w-full space-y-4 p-4 rounded-lg shadow-sm">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-4xl">
                 <AutoComplete
                   className="w-full"
                   options={options}
@@ -203,7 +204,7 @@ export const MainPage = () => {
                   />
                 </AutoComplete>
 
-                <RangePicker
+                {/* <RangePicker
                   className="w-full"
                   size="large"
                   onChange={(dates) => {
@@ -216,6 +217,31 @@ export const MainPage = () => {
                   value={dateRange}
                   format="YYYY-MM-DD"
                   style={inputStyle}
+                  showTime
+                /> */}
+                <RangePicker
+                  className="w-full"
+                  size="large"
+                  onChange={(dates) => {
+                    console.log("RangePicker onChange:", dates);
+                    setDateRange(dates ? [dates[0], dates[1]] : null);
+                  }}
+                  value={dateRange}
+                  format="YYYY-MM-DD HH:00"
+                  style={inputStyle}
+                  showTime={{
+                    format: "HH",
+                    hourStep: 1,
+                    showSecond: false,
+                    showMinute: false,
+                    use12Hours: false,
+                  }}
+                  showHour={true}
+                  showNow={false}
+                  defaultPickerValue={[
+                    dayjs().startOf("day"),
+                    dayjs().endOf("day").startOf("hour"),
+                  ]}
                 />
               </div>
 
@@ -224,7 +250,7 @@ export const MainPage = () => {
                   onClick={handleSearch}
                   type="default"
                   size="large"
-                  className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                  className="bg-purple-800 text-white hover:bg-purple-900 px-8 w-full sm:w-auto"
                   style={{ fontFamily: "Exo" }}
                 >
                   Search
@@ -233,7 +259,7 @@ export const MainPage = () => {
                   onClick={handleClearSearch}
                   type="default"
                   size="large"
-                  className="bg-purple-800 text-white hover:bg-purple-900 px-8"
+                  className="bg-purple-800 text-white hover:bg-purple-900 px-8 w-full sm:w-auto"
                   style={{ fontFamily: "Exo" }}
                 >
                   Clear

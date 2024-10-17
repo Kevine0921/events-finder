@@ -48,7 +48,7 @@ export const Navigation: React.FC = () => {
           </Link>
 
           {/* Mobile menu button */}
-          <button
+          {/* <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-violet-500 hover:text-zinc-100">
             <svg
@@ -63,7 +63,7 @@ export const Navigation: React.FC = () => {
                 d="M4 6h16M4 12h16m-7 6h7"
               />
             </svg>
-          </button>
+          </button> */}
 
           {/* Desktop Navigation */}
           {/* <div className="hidden md:flex flex-row justify-between items-center w-full ml-8">
