@@ -158,10 +158,10 @@ export const MainPage = () => {
   return (
     <ConfigProvider
       theme={{
-        components: {
-          DatePicker: {
-            // You can customize the DatePicker theme here if needed
-          },
+        token: {
+          colorPrimary: "purple",
+          colorPrimaryHover: "#8a2be2",
+          colorPrimaryActive: "#6a0dad",
         },
       }}
     >
