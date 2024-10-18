@@ -26,7 +26,7 @@ const getCityName = (geoAddressInfo) => {
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), "script", "luma_events.json");
+    const filePath = path.join(process.cwd(), "luma_events.json");
     const jsonData = await fs.readFile(filePath, "utf8");
     const events = JSON.parse(jsonData);
 
