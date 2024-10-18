@@ -4,7 +4,7 @@ import path from "path";
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), "script", "meetup_events.json");
+    const filePath = path.join(process.cwd(), "meetup_events.json");
     const jsonData = await fs.readFile(filePath, "utf8");
     const events = JSON.parse(jsonData);
 
